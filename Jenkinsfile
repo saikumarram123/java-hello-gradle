@@ -1,25 +1,27 @@
 pipeline {
-     agent any
-     stages {
-         stage('Clean Workspace') {
-             steps {
-                  deleteDir()                  
-             }
-         }
-         stage('Clone Project') {
-             steps {                  
-                  checkout scm                  
-             }
-         }
-         stage('Build') {
-             steps {                  
-                  sh './gradlew clean build'
-             }              
-             post {
-                 always {
-                     jiraSendBuildInfo site: 'bashsquad.atlassian.net'
-                 }
-             }
-         }
-     }
- }
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    // Retrieve the username of the person who triggered the build
+                    def triggerUser = ''
+                    def cause = currentBuild.rawBuild.getCause(com.cloudbees.jenkins.plugins.GitHubPushCause)
+                    
+                    if (cause) {
+                        triggerUser = cause.getTriggerSender().getDisplayName()
+                    } else {
+                        // Handle other trigger causes if needed
+                    }
+                    
+                    // Print the username
+                    echo "Build triggered by: ${triggerUser}"
+                    
+                    // Perform other build steps
+                    // ...
+                }
+            }
+        }
+    }
+}
