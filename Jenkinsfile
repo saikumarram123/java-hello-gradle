@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Retrieve the username of the person who triggered the build
-                    def triggerUser = env.CHANGE_AUTHOR
+                    def triggerUser = ''
                     def cause = currentBuild.rawBuild.getCause(com.cloudbees.jenkins.plugins.GitHubPushCause)
                     
                     if (cause) {
